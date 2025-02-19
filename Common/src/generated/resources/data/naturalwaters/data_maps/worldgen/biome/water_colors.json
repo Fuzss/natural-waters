@@ -1,0 +1,49 @@
+{
+  "values": {
+    "#minecraft:is_nether": {
+      "water_fog_color": "#905957",
+      "water_fog_distance": 15,
+      "water_surface_color": "#905957"
+    },
+    "minecraft:desert": {
+      "water_fog_color": "#32A598",
+      "water_fog_distance": 60,
+      "water_surface_color": "#32A598"
+    },
+    "minecraft:flower_forest": {
+      "water_fog_color": "#20A3CC",
+      "water_fog_distance": 60,
+      "water_surface_color": "#20A3CC"
+    },
+    "minecraft:forest": {
+      "water_fog_color": "#1E97F2",
+      "water_fog_distance": 60,
+      "water_surface_color": "#1E97F2"
+    },
+    "minecraft:plains": {
+      "water_fog_color": "#44AFF5",
+      "water_fog_distance": 60,
+      "water_surface_color": "#44AFF5"
+    },
+    "minecraft:sunflower_plains": {
+      "water_fog_color": "#44AFF5",
+      "water_fog_distance": 60,
+      "water_surface_color": "#44AFF5"
+    },
+    "minecraft:swamp": {
+      "water_fog_color": "#4C6559",
+      "water_fog_distance": 30,
+      "water_surface_color": "#4C6559",
+      "water_surface_transparency": 1.0
+    },
+    "minecraft:taiga": {
+      "water_fog_color": "#287082",
+      "water_fog_distance": 60,
+      "water_surface_color": "#287082"
+    },
+    "minecraft:windswept_hills": {
+      "water_fog_color": "#007BF7",
+      "water_surface_color": "#007BF7"
+    }
+  }
+}
