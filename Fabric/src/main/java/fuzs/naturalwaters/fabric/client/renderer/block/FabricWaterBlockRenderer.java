@@ -1,6 +1,8 @@
 package fuzs.naturalwaters.fabric.client.renderer.block;
 
+import fuzs.naturalwaters.NaturalWaters;
 import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
+import fuzs.naturalwaters.config.ClientConfig;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -21,11 +23,15 @@ public final class FabricWaterBlockRenderer implements FluidRenderHandler {
      */
     private static final int NORMAL_WATER_COLOR = 4159204;
 
-    private final TextureAtlasSprite[] sprites = new TextureAtlasSprite[3];
+    private final TextureAtlasSprite[] sprites = new TextureAtlasSprite[3], opaqueSprites = new TextureAtlasSprite[3];
 
     @Override
     public TextureAtlasSprite[] getFluidSprites(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state) {
-        return this.sprites;
+        if (NaturalWaters.CONFIG.get(ClientConfig.class).waterSurfaceTransparency) {
+            return this.opaqueSprites;
+        } else {
+            return this.sprites;
+        }
     }
 
     @Override
@@ -40,7 +46,9 @@ public final class FabricWaterBlockRenderer implements FluidRenderHandler {
     @Override
     public void reloadTextures(TextureAtlas textureAtlas) {
         this.sprites[0] = OpaqueWaterPackResources.WATER_STILL_MATERIAL.sprite();
+        this.opaqueSprites[0] = OpaqueWaterPackResources.OPAQUE_WATER_STILL_MATERIAL.sprite();
         this.sprites[1] = OpaqueWaterPackResources.WATER_FLOW_MATERIAL.sprite();
-        this.sprites[2] = ModelBakery.WATER_OVERLAY.sprite();
+        this.opaqueSprites[1] = OpaqueWaterPackResources.OPAQUE_WATER_FLOW_MATERIAL.sprite();
+        this.sprites[2] = this.opaqueSprites[2] = ModelBakery.WATER_OVERLAY.sprite();
     }
 }

@@ -1,6 +1,8 @@
 package fuzs.naturalwaters.client.renderer;
 
+import fuzs.naturalwaters.NaturalWaters;
 import fuzs.naturalwaters.client.biome.ClientBiomeManager;
+import fuzs.naturalwaters.config.ClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintCache;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,9 +21,11 @@ public class ModBiomeColors {
     };
 
     public static void onLevelLoad(Minecraft minecraft, ClientLevel clientLevel) {
-        clientLevel.tintCaches.put(BiomeColors.WATER_COLOR_RESOLVER, new BlockTintCache((BlockPos blockPos) -> {
-            return clientLevel.calculateBlockTint(blockPos, WATER_COLOR_RESOLVER);
-        }));
+        if (NaturalWaters.CONFIG.get(ClientConfig.class).waterSurfaceColor) {
+            clientLevel.tintCaches.put(BiomeColors.WATER_COLOR_RESOLVER, new BlockTintCache((BlockPos blockPos) -> {
+                return clientLevel.calculateBlockTint(blockPos, WATER_COLOR_RESOLVER);
+            }));
+        }
         clientLevel.tintCaches.put(WATER_TRANSPARENCY_RESOLVER,
                 new BlockTintCache((BlockPos blockPos) -> clientLevel.calculateBlockTint(blockPos,
                         WATER_TRANSPARENCY_RESOLVER)));

@@ -1,7 +1,7 @@
 package fuzs.naturalwaters.client.biome;
 
 /**
- * Values dumped from Bedrock Edition 1.21.70.23.
+ * Values pulled from Bedrock Edition 1.21.70.23.
  */
 public final class BuiltInBiomeClientInfos {
     public static final BiomeClientInfo DEFAULT = new BiomeClientInfo(0x44AFF5, 0x44AFF5);

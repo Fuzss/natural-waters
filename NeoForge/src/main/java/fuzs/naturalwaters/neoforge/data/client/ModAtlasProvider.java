@@ -12,7 +12,8 @@ public class ModAtlasProvider extends AbstractAtlasProvider {
 
     @Override
     public void addAtlases() {
-        this.material(OpaqueWaterPackResources.WATER_STILL_MATERIAL);
-        this.material(OpaqueWaterPackResources.WATER_FLOW_MATERIAL);
+        // we must manually add these, as they are dynamically created and therefore cannot be located by the directory lister
+        this.material(OpaqueWaterPackResources.OPAQUE_WATER_STILL_MATERIAL);
+        this.material(OpaqueWaterPackResources.OPAQUE_WATER_FLOW_MATERIAL);
     }
 }

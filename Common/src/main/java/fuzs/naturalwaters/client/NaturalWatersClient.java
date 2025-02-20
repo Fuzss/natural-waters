@@ -5,6 +5,7 @@ import fuzs.naturalwaters.NaturalWaters;
 import fuzs.naturalwaters.client.biome.ClientBiomeManager;
 import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
 import fuzs.naturalwaters.client.renderer.ModBiomeColors;
+import fuzs.naturalwaters.config.ClientConfig;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.api.client.event.v1.AddResourcePackReloadListenersCallback;
 import fuzs.puzzleslib.api.client.event.v1.level.ClientLevelEvents;
@@ -22,6 +23,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.FogType;
 
+import java.util.Optional;
+
 public class NaturalWatersClient implements ClientModConstructor {
 
     @Override
@@ -34,11 +37,12 @@ public class NaturalWatersClient implements ClientModConstructor {
         TagsUpdatedCallback.EVENT.register(ClientBiomeManager::onTagsUpdated);
         ClientLevelEvents.LOAD.register(ModBiomeColors::onLevelLoad);
         FogEvents.RENDER.register((GameRenderer gameRenderer, Camera camera, float partialTick, FogRenderer.FogMode fogMode, FogType fogType, MutableFloat fogStart, MutableFloat fogEnd, MutableValue<FogShape> fogShape) -> {
+            if (!NaturalWaters.CONFIG.get(ClientConfig.class).waterFogDistance) return;
             if (fogType == FogType.WATER && camera.getEntity() instanceof LocalPlayer localPlayer) {
                 Holder<Biome> holder = localPlayer.level().getBiome(localPlayer.blockPosition());
-                float waterFogDistanceScale = ClientBiomeManager.getBiomeClientInfo(holder).getWaterFogDistanceScale();
-                if (waterFogDistanceScale != 1.0F) {
-                    fogEnd.accept(96.0F * Math.max(0.25F, localPlayer.getWaterVision()) * waterFogDistanceScale);
+                Optional<Float> optional = ClientBiomeManager.getBiomeClientInfo(holder).waterFogDistance();
+                if (optional.isPresent()) {
+                    fogEnd.accept(96.0F * Math.max(0.25F, localPlayer.getWaterVision()) * optional.get());
                     if (fogEnd.getAsFloat() > gameRenderer.getRenderDistance()) {
                         fogEnd.accept(gameRenderer.getRenderDistance());
                     } else {
@@ -53,6 +57,6 @@ public class NaturalWatersClient implements ClientModConstructor {
     public void onAddResourcePackFinders(PackRepositorySourcesContext context) {
         context.addRepositorySource(PackResourcesHelper.buildClientPack(NaturalWaters.id("opaque_water"),
                 OpaqueWaterPackResources::new,
-                false));
+                true));
     }
 }

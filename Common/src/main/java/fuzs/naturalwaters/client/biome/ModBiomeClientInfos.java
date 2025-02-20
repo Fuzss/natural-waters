@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public final class TagBiomeClientInfos {
+public final class ModBiomeClientInfos {
     static final Map<Predicate<Holder<Biome>>, BiomeClientInfo> DYNAMIC_BIOME_CLIENT_INFOS;
 
     static {
@@ -178,7 +178,7 @@ public final class TagBiomeClientInfos {
         DYNAMIC_BIOME_CLIENT_INFOS = builder.build();
     }
 
-    private TagBiomeClientInfos() {
+    private ModBiomeClientInfos() {
         // NO-OP
     }
 

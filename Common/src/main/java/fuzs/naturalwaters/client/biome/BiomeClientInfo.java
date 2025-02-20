@@ -15,10 +15,6 @@ public record BiomeClientInfo(Optional<Integer> waterSurfaceColor,
                               Optional<Integer> waterFogColor,
                               Optional<Float> waterFogDistance,
                               Optional<Float> waterSurfaceTransparency) {
-    public static final BiomeClientInfo EMPTY = new BiomeClientInfo(Optional.empty(),
-            Optional.empty(),
-            Optional.empty(),
-            Optional.empty());
     public static final Codec<Integer> COLOR_CODEC = Codec.withAlternative(TextColor.CODEC.xmap(TextColor::getValue,
             TextColor::fromRgb), ExtraCodecs.RGB_COLOR_CODEC);
     public static final Codec<BiomeClientInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(COLOR_CODEC.optionalFieldOf(
@@ -42,14 +38,11 @@ public record BiomeClientInfo(Optional<Integer> waterSurfaceColor,
             BiomeClientInfo::new);
 
     public BiomeClientInfo(int waterSurfaceColor, int waterFogColor) {
-        this(Optional.of(waterSurfaceColor), Optional.of(waterFogColor), Optional.empty(), Optional.empty());
+        this(waterSurfaceColor, waterFogColor, 1.0F);
     }
 
     public BiomeClientInfo(int waterSurfaceColor, int waterFogColor, float waterFogDistance) {
-        this(Optional.of(waterSurfaceColor),
-                Optional.of(waterFogColor),
-                Optional.of(waterFogDistance),
-                Optional.empty());
+        this(waterSurfaceColor, waterFogColor, waterFogDistance, 0.75F);
     }
 
     public BiomeClientInfo(int waterSurfaceColor, int waterFogColor, float waterFogDistance, float waterSurfaceTransparency) {
@@ -59,14 +52,14 @@ public record BiomeClientInfo(Optional<Integer> waterSurfaceColor,
                 Optional.of(waterSurfaceTransparency));
     }
 
-    public float getWaterFogDistanceScale() {
-        // return this as a scale, so we can apply that to the default fog distance Java Edition uses,
-        // which is 96 instead of 60 in Bedrock Edition (do not want to make it worse)
-        return this.waterFogDistance.orElse(1.0F);
+    public Optional<Integer> getWaterFogColor() {
+        return this.waterFogColor.or(this::waterSurfaceColor);
     }
 
     public int getWaterSurfaceTransparency() {
-        // Bedrock Edition default value is 65%, but 70% is closer to the Java Edition water texture transparency (which we remove muhahaha)
+        // Bedrock Edition default value for biomes is 65%,
+        // but 70% is the Java Edition water texture transparency (which we remove)
+        // increase this a little as it is slightly reduced later in ModBiomeColors::getAverageWaterTransparency
         return ARGB.as8BitChannel(this.waterSurfaceTransparency.orElse(0.75F));
     }
 }

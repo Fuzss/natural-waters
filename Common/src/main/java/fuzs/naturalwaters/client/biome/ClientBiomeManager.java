@@ -20,12 +20,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<BiomeClientInfo> {
     public static final String ASSET_DIRECTORY = NaturalWaters.MOD_ID + "/biomes";
     private static final FileToIdConverter ASSET_LISTER = FileToIdConverter.json(ASSET_DIRECTORY);
+    static final BiomeClientInfo BUILT_IN_FALLBACK = new BiomeClientInfo(Optional.empty(),
+            Optional.empty(),
+            Optional.empty(),
+            Optional.empty());
 
     @Nullable
     private static ClientBiomeManager instance;
@@ -58,22 +63,22 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
                     .lookup(Registries.BIOME)
                     .flatMap((Registry<Biome> registry) -> registry.getResourceKey(biome))
                     .map(ClientBiomeManager::getBiomeClientInfo)
-                    .orElse(BiomeClientInfo.EMPTY);
+                    .orElse(BUILT_IN_FALLBACK);
         } else {
-            return BiomeClientInfo.EMPTY;
+            return BUILT_IN_FALLBACK;
         }
     }
 
     public static BiomeClientInfo getBiomeClientInfo(Holder<Biome> holder) {
-        return holder.unwrapKey().map(ClientBiomeManager::getBiomeClientInfo).orElse(BiomeClientInfo.EMPTY);
+        return holder.unwrapKey().map(ClientBiomeManager::getBiomeClientInfo).orElse(BUILT_IN_FALLBACK);
     }
 
     public static BiomeClientInfo getBiomeClientInfo(ResourceKey<Biome> resourceKey) {
         ClientBiomeManager clientBiomeManager = instance;
         if (clientBiomeManager != null) {
-            return clientBiomeManager.resolvedBiomeClientInfos.getOrDefault(resourceKey, BiomeClientInfo.EMPTY);
+            return clientBiomeManager.resolvedBiomeClientInfos.getOrDefault(resourceKey, BUILT_IN_FALLBACK);
         } else {
-            return BiomeClientInfo.EMPTY;
+            return BUILT_IN_FALLBACK;
         }
     }
 
@@ -94,7 +99,7 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
     static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos) {
         biomeLookup.listElements().forEach((Holder.Reference<Biome> holder) -> {
             if (!biomeClientInfos.containsKey(holder.key())) {
-                TagBiomeClientInfos.pick(holder)
+                ModBiomeClientInfos.pick(holder)
                         .ifPresent((BiomeClientInfo biomeClientInfo) -> biomeClientInfos.put(holder.key(),
                                 biomeClientInfo));
             }

@@ -27,12 +27,12 @@ public final class NeoForgeWaterBlockRenderer implements IClientFluidTypeExtensi
 
     @Override
     public ResourceLocation getStillTexture() {
-        return OpaqueWaterPackResources.WATER_STILL_MATERIAL.texture();
+        return OpaqueWaterPackResources.getWaterStillMaterial().texture();
     }
 
     @Override
     public ResourceLocation getFlowingTexture() {
-        return OpaqueWaterPackResources.WATER_FLOW_MATERIAL.texture();
+        return OpaqueWaterPackResources.getWaterFlowMaterial().texture();
     }
 
     @Override
