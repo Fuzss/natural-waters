@@ -52,9 +52,7 @@ public final class BuiltInBiomeClientInfos {
     public static final BiomeClientInfo DEEP_FROZEN_OCEAN = new BiomeClientInfo(0x2570B5, 0x1a4879);
     public static final BiomeClientInfo MANGROVE_SWAMP = new BiomeClientInfo(0x3a7a6a, 0x4d7a60, 0.85F);
     public static final BiomeClientInfo JUNGLE = new BiomeClientInfo(0x14A2C5, 0x14A2C5);
-    public static final BiomeClientInfo EXTREME_HILLS_PLUS_TREES_MUTATED = new BiomeClientInfo(0x0E63AB,
-            0x0E63AB,
-            60.0F);
+    public static final BiomeClientInfo EXTREME_HILLS_PLUS_TREES_MUTATED = new BiomeClientInfo(0x0E63AB, 0x0E63AB);
     public static final BiomeClientInfo JUNGLE_MUTATED = new BiomeClientInfo(0x1B9ED8, 0x1B9ED8);
     public static final BiomeClientInfo ICE_MOUNTAINS = new BiomeClientInfo(0x1156a7, 0x1156a7);
     public static final BiomeClientInfo JUNGLE_EDGE = new BiomeClientInfo(0x0D8AE3, 0x0D8AE3);
