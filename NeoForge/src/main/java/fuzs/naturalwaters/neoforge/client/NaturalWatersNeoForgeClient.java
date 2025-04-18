@@ -2,8 +2,8 @@ package fuzs.naturalwaters.neoforge.client;
 
 import fuzs.naturalwaters.NaturalWaters;
 import fuzs.naturalwaters.client.NaturalWatersClient;
+import fuzs.naturalwaters.data.client.ModAtlasProvider;
 import fuzs.naturalwaters.neoforge.client.renderer.block.NeoForgeWaterBlockRenderer;
-import fuzs.naturalwaters.neoforge.data.client.ModAtlasProvider;
 import fuzs.naturalwaters.neoforge.data.client.ModBiomeClientInfoProvider;
 import fuzs.naturalwaters.neoforge.mixin.client.accessor.ClientExtensionsManagerNeoForgeAccessor;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
