@@ -25,10 +25,18 @@ public class ModBiomeColors {
             clientLevel.tintCaches.put(BiomeColors.WATER_COLOR_RESOLVER, new BlockTintCache((BlockPos blockPos) -> {
                 return clientLevel.calculateBlockTint(blockPos, WATER_COLOR_RESOLVER);
             }));
+            // register this separately for our own use, as mods like Sodium override the vanilla resolver themselves
+            clientLevel.tintCaches.put(WATER_COLOR_RESOLVER, new BlockTintCache((BlockPos blockPos) -> {
+                return clientLevel.calculateBlockTint(blockPos, WATER_COLOR_RESOLVER);
+            }));
         }
         clientLevel.tintCaches.put(WATER_TRANSPARENCY_RESOLVER,
                 new BlockTintCache((BlockPos blockPos) -> clientLevel.calculateBlockTint(blockPos,
                         WATER_TRANSPARENCY_RESOLVER)));
+    }
+
+    public static int getAverageWaterColor(BlockAndTintGetter level, BlockPos blockPos) {
+        return level.getBlockTint(blockPos, WATER_COLOR_RESOLVER);
     }
 
     public static float getAverageWaterTransparency(BlockAndTintGetter level, BlockPos blockPos) {

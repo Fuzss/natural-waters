@@ -1,8 +1,8 @@
 package fuzs.naturalwaters.neoforge.client.renderer.block;
 
 import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
+import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +52,6 @@ public final class NeoForgeWaterBlockRenderer implements IClientFluidTypeExtensi
 
     @Override
     public int getTintColor(FluidState fluidState, BlockAndTintGetter level, BlockPos blockPos) {
-        return ARGB.opaque(BiomeColors.getAverageWaterColor(level, blockPos));
+        return ARGB.opaque(ModBiomeColors.getAverageWaterColor(level, blockPos));
     }
 }

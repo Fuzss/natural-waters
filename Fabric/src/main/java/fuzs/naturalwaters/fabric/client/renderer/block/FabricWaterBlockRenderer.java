@@ -2,9 +2,9 @@ package fuzs.naturalwaters.fabric.client.renderer.block;
 
 import fuzs.naturalwaters.NaturalWaters;
 import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
+import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import fuzs.naturalwaters.config.ClientConfig;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
-import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.ModelBakery;
@@ -37,7 +37,7 @@ public final class FabricWaterBlockRenderer implements FluidRenderHandler {
     @Override
     public int getFluidColor(@Nullable BlockAndTintGetter view, @Nullable BlockPos pos, FluidState state) {
         if (view != null && pos != null) {
-            return BiomeColors.getAverageWaterColor(view, pos);
+            return ModBiomeColors.getAverageWaterColor(view, pos);
         } else {
             return NORMAL_WATER_COLOR;
         }
