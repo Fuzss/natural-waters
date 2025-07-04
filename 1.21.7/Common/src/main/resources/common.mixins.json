@@ -6,8 +6,8 @@
   "mixins": [
   ],
   "client": [
-    "client.FogRendererMixin",
-    "client.LiquidBlockRendererMixin"
+    "client.LiquidBlockRendererMixin",
+    "client.WaterFogEnvironmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1
