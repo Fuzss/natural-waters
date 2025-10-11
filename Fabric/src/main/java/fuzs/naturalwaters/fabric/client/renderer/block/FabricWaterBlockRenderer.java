@@ -45,10 +45,10 @@ public final class FabricWaterBlockRenderer implements FluidRenderHandler {
 
     @Override
     public void reloadTextures(TextureAtlas textureAtlas) {
-        this.sprites[0] = OpaqueWaterPackResources.WATER_STILL_MATERIAL.sprite();
-        this.opaqueSprites[0] = OpaqueWaterPackResources.OPAQUE_WATER_STILL_MATERIAL.sprite();
-        this.sprites[1] = OpaqueWaterPackResources.WATER_FLOW_MATERIAL.sprite();
-        this.opaqueSprites[1] = OpaqueWaterPackResources.OPAQUE_WATER_FLOW_MATERIAL.sprite();
-        this.sprites[2] = this.opaqueSprites[2] = ModelBakery.WATER_OVERLAY.sprite();
+        this.sprites[0] = textureAtlas.getSprite(OpaqueWaterPackResources.WATER_STILL_MATERIAL.texture());
+        this.opaqueSprites[0] = textureAtlas.getSprite(OpaqueWaterPackResources.OPAQUE_WATER_STILL_MATERIAL.texture());
+        this.sprites[1] = textureAtlas.getSprite(OpaqueWaterPackResources.WATER_FLOW_MATERIAL.texture());
+        this.opaqueSprites[1] = textureAtlas.getSprite(OpaqueWaterPackResources.OPAQUE_WATER_FLOW_MATERIAL.texture());
+        this.sprites[2] = this.opaqueSprites[2] = textureAtlas.getSprite(ModelBakery.WATER_OVERLAY.texture());
     }
 }
