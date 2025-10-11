@@ -56,7 +56,7 @@ public class NaturalWatersClient implements ClientModConstructor {
 
     @Override
     public void onAddResourcePackFinders(PackRepositorySourcesContext context) {
-        context.addRepositorySource(PackResourcesHelper.buildClientPack(NaturalWaters.id("opaque_water"),
+        context.registerRepositorySource(PackResourcesHelper.buildClientPack(NaturalWaters.id("opaque_water"),
                 OpaqueWaterPackResources::new,
                 true));
     }
