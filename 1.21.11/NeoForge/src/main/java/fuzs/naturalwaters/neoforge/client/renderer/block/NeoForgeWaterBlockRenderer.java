@@ -5,7 +5,7 @@ import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
@@ -22,26 +22,26 @@ public final class NeoForgeWaterBlockRenderer implements IClientFluidTypeExtensi
     /**
      * See {@link net.minecraft.client.renderer.ScreenEffectRenderer#UNDERWATER_LOCATION}.
      */
-    private static final ResourceLocation UNDERWATER_LOCATION = ResourceLocation.withDefaultNamespace(
+    private static final Identifier UNDERWATER_LOCATION = Identifier.withDefaultNamespace(
             "textures/misc/underwater.png");
 
     @Override
-    public ResourceLocation getStillTexture() {
+    public Identifier getStillTexture() {
         return OpaqueWaterPackResources.getWaterStillMaterial().texture();
     }
 
     @Override
-    public ResourceLocation getFlowingTexture() {
+    public Identifier getFlowingTexture() {
         return OpaqueWaterPackResources.getWaterFlowMaterial().texture();
     }
 
     @Override
-    public ResourceLocation getOverlayTexture() {
+    public Identifier getOverlayTexture() {
         return ModelBakery.WATER_OVERLAY.texture();
     }
 
     @Override
-    public ResourceLocation getRenderOverlayTexture(Minecraft minecraft) {
+    public Identifier getRenderOverlayTexture(Minecraft minecraft) {
         return UNDERWATER_LOCATION;
     }
 

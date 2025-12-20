@@ -11,7 +11,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.FluidState;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Copied from {@link net.fabricmc.fabric.impl.client.rendering.fluid.FluidRenderHandlerRegistryImpl.WaterRenderHandler}

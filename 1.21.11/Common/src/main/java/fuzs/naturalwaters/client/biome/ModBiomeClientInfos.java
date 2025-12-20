@@ -183,7 +183,7 @@ public final class ModBiomeClientInfos {
     }
 
     @SafeVarargs
-    static void register(ImmutableMap.Builder<Predicate<Holder<Biome>>, BiomeClientInfo> builder, BiomeClientInfo biomeClientInfo, TagKey<Biome> primaryTagKey, TagKey<Biome>... secondaryTagKeys) {
+    private static void register(ImmutableMap.Builder<Predicate<Holder<Biome>>, BiomeClientInfo> builder, BiomeClientInfo biomeClientInfo, TagKey<Biome> primaryTagKey, TagKey<Biome>... secondaryTagKeys) {
         builder.put((Holder<Biome> holder) -> {
             if (holder.is(primaryTagKey)) {
                 if (secondaryTagKeys.length != 0) {
