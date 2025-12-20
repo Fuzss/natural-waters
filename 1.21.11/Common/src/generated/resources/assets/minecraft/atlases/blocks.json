@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "naturalwaters:block/water_still"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "naturalwaters:block/water_flow"
+    }
+  ]
+}
