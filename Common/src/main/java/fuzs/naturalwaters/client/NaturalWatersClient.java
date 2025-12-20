@@ -6,7 +6,7 @@ import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
 import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import fuzs.naturalwaters.config.ClientConfig;
 import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.api.client.event.v1.AddResourcePackReloadListenersCallback;
+import fuzs.puzzleslib.api.client.core.v1.context.ResourcePackReloadListenersContext;
 import fuzs.puzzleslib.api.client.event.v1.level.ClientLevelEvents;
 import fuzs.puzzleslib.api.client.event.v1.renderer.FogEvents;
 import fuzs.puzzleslib.api.core.v1.context.PackRepositorySourcesContext;
@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.material.FogType;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -33,15 +33,17 @@ public class NaturalWatersClient implements ClientModConstructor {
     }
 
     private static void registerEventHandlers() {
-        AddResourcePackReloadListenersCallback.EVENT.register(ClientBiomeManager::onAddResourcePackReloadListeners);
         TagsUpdatedCallback.EVENT.register(ClientBiomeManager::onTagsUpdated);
         ClientLevelEvents.LOAD.register(ModBiomeColors::onLevelLoad);
         FogEvents.SETUP.register(NaturalWatersClient::onSetupFog);
     }
 
     private static void onSetupFog(Camera camera, float partialTick, @Nullable FogEnvironment fogEnvironment, FogType fogType, FogData fogData) {
-        if (!NaturalWaters.CONFIG.get(ClientConfig.class).waterFogDistance) return;
-        if (fogType == FogType.WATER && camera.getEntity() instanceof LocalPlayer localPlayer) {
+        if (!NaturalWaters.CONFIG.get(ClientConfig.class).waterFogDistance) {
+            return;
+        }
+
+        if (fogType == FogType.WATER && camera.entity() instanceof LocalPlayer localPlayer) {
             Holder<Biome> holder = localPlayer.level().getBiome(localPlayer.blockPosition());
             Optional<Float> optional = ClientBiomeManager.getBiomeClientInfo(holder).waterFogDistance();
             if (optional.isPresent()) {
@@ -59,5 +61,10 @@ public class NaturalWatersClient implements ClientModConstructor {
         context.registerRepositorySource(PackResourcesHelper.buildClientPack(NaturalWaters.id("opaque_water"),
                 OpaqueWaterPackResources::new,
                 true));
+    }
+
+    @Override
+    public void onAddResourcePackReloadListeners(ResourcePackReloadListenersContext context) {
+        ClientBiomeManager.onAddResourcePackReloadListeners(context::registerReloadListener);
     }
 }

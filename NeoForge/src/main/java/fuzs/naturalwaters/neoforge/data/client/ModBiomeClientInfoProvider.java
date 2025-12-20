@@ -97,6 +97,6 @@ public class ModBiomeClientInfoProvider extends JsonCodecProvider<BiomeClientInf
     }
 
     public final void biome(ResourceKey<Biome> resourceKey, BiomeClientInfo biomeClientInfo) {
-        this.unconditional(resourceKey.location(), biomeClientInfo);
+        this.unconditional(resourceKey.identifier(), biomeClientInfo);
     }
 }
