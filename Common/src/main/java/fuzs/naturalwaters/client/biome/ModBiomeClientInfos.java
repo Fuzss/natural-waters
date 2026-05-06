@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public final class ModBiomeClientInfos {
-    static final Map<Predicate<Holder<Biome>>, BiomeClientInfo> DYNAMIC_BIOME_CLIENT_INFOS;
+    private static final Map<Predicate<Holder<Biome>>, BiomeClientInfo> DYNAMIC_BIOME_CLIENT_INFOS;
 
     static {
         ImmutableMap.Builder<Predicate<Holder<Biome>>, BiomeClientInfo> builder = ImmutableMap.builder();

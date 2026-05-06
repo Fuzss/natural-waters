@@ -96,7 +96,7 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
         }
     }
 
-    static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos) {
+    private static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos) {
         biomeLookup.listElements().forEach((Holder.Reference<Biome> holder) -> {
             if (!biomeClientInfos.containsKey(holder.key())) {
                 ModBiomeClientInfos.pick(holder)

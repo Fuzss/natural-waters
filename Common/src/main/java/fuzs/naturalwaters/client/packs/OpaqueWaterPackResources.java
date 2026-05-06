@@ -3,19 +3,24 @@ package fuzs.naturalwaters.client.packs;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.NativeImage;
 import fuzs.naturalwaters.NaturalWaters;
+import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import fuzs.naturalwaters.config.ClientConfig;
-import fuzs.puzzleslib.api.client.packs.v1.NativeImageHelper;
-import fuzs.puzzleslib.api.resources.v1.AbstractModPackResources;
+import fuzs.puzzleslib.common.api.client.packs.v1.NativeImageHelper;
+import fuzs.puzzleslib.common.api.resources.v1.AbstractModPackResources;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.resources.model.Material;
-import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.color.block.BlockTintSources;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.FluidModel;
+import net.minecraft.client.resources.model.sprite.Material;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.ARGB;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 import java.io.ByteArrayInputStream;
@@ -26,50 +31,66 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 
 public class OpaqueWaterPackResources extends AbstractModPackResources {
-    public static final Material WATER_STILL_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS,
-            Identifier.withDefaultNamespace("block/water_still"));
-    public static final Material WATER_FLOW_MATERIAL = ModelBakery.WATER_FLOW;
-    public static final Material OPAQUE_WATER_STILL_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS,
-            NaturalWaters.id(WATER_STILL_MATERIAL.texture().getPath()));
-    public static final Material OPAQUE_WATER_FLOW_MATERIAL = new Material(TextureAtlas.LOCATION_BLOCKS,
-            NaturalWaters.id(WATER_FLOW_MATERIAL.texture().getPath()));
+    /**
+     * @see net.minecraft.client.renderer.block.FluidStateModelSet#WATER_MODEL
+     */
+    private static final FluidModel.Unbaked WATER_MODEL = new FluidModel.Unbaked(new Material(Identifier.withDefaultNamespace(
+            "block/water_still")),
+            new Material(Identifier.withDefaultNamespace("block/water_flow")),
+            new Material(Identifier.withDefaultNamespace("block/water_overlay")),
+            BlockTintSources.water());
+    public static final FluidModel.Unbaked OPAQUE_WATER_MODEL = new FluidModel.Unbaked(new Material(NaturalWaters.id(
+            "block/water_still")),
+            new Material(NaturalWaters.id("block/water_flow")),
+            WATER_MODEL.overlayMaterial(),
+            water());
     private static final Map<Identifier, Identifier> RESOURCE_LOCATIONS;
 
     private final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
     static {
         ImmutableMap.Builder<Identifier, Identifier> builder = ImmutableMap.builder();
-        registerTextureMapping(builder::put, OPAQUE_WATER_STILL_MATERIAL.texture(), WATER_STILL_MATERIAL.texture());
-        registerTextureMapping(builder::put, OPAQUE_WATER_FLOW_MATERIAL.texture(), WATER_FLOW_MATERIAL.texture());
+        registerTextureMapping(builder::put,
+                OPAQUE_WATER_MODEL.stillMaterial().sprite(),
+                WATER_MODEL.stillMaterial().sprite());
+        registerTextureMapping(builder::put,
+                OPAQUE_WATER_MODEL.flowingMaterial().sprite(),
+                WATER_MODEL.flowingMaterial().sprite());
         RESOURCE_LOCATIONS = builder.build();
     }
 
-    static void registerTextureMapping(BiConsumer<Identifier, Identifier> consumer, Identifier providedResourceLocation, Identifier originalResourceLocation) {
+    public static BlockTintSource water() {
+        return new BlockTintSource() {
+            @Override
+            public int color(BlockState state) {
+                return -1;
+            }
+
+            @Override
+            public int colorInWorld(BlockState state, BlockAndTintGetter level, BlockPos pos) {
+                return ModBiomeColors.getAverageWaterColor(level, pos);
+            }
+        };
+    }
+
+    private static void registerTextureMapping(BiConsumer<Identifier, Identifier> consumer, Identifier providedResourceLocation, Identifier originalResourceLocation) {
         consumer.accept(getTextureLocation(providedResourceLocation), getTextureLocation(originalResourceLocation));
         consumer.accept(getMetadataLocation(providedResourceLocation), getMetadataLocation(originalResourceLocation));
     }
 
-    static Identifier getTextureLocation(Identifier identifier) {
+    private static Identifier getTextureLocation(Identifier identifier) {
         return identifier.withPath((String s) -> "textures/" + s + ".png");
     }
 
-    static Identifier getMetadataLocation(Identifier identifier) {
+    private static Identifier getMetadataLocation(Identifier identifier) {
         return identifier.withPath((String s) -> "textures/" + s + ".png.mcmeta");
     }
 
-    public static Material getWaterStillMaterial() {
+    public static FluidModel.Unbaked getFluidModel() {
         if (NaturalWaters.CONFIG.get(ClientConfig.class).waterSurfaceTransparency) {
-            return OPAQUE_WATER_STILL_MATERIAL;
+            return OPAQUE_WATER_MODEL;
         } else {
-            return WATER_STILL_MATERIAL;
-        }
-    }
-
-    public static Material getWaterFlowMaterial() {
-        if (NaturalWaters.CONFIG.get(ClientConfig.class).waterSurfaceTransparency) {
-            return OPAQUE_WATER_FLOW_MATERIAL;
-        } else {
-            return WATER_FLOW_MATERIAL;
+            return WATER_MODEL;
         }
     }
 

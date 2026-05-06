@@ -16,14 +16,13 @@ import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtension
  */
 public final class NeoForgeWaterBlockRenderer implements IClientFluidTypeExtensions {
     /**
-     * See {@link net.minecraft.data.worldgen.biome.OverworldBiomes#NORMAL_WATER_COLOR}.
+     * @see net.minecraft.data.worldgen.biome.OverworldBiomes#NORMAL_WATER_COLOR
      */
     private static final int NORMAL_WATER_COLOR = 4159204;
     /**
-     * See {@link net.minecraft.client.renderer.ScreenEffectRenderer#UNDERWATER_LOCATION}.
+     * @see net.minecraft.client.renderer.ScreenEffectRenderer#UNDERWATER_LOCATION
      */
-    private static final Identifier UNDERWATER_LOCATION = Identifier.withDefaultNamespace(
-            "textures/misc/underwater.png");
+    private static final Identifier UNDERWATER_LOCATION = Identifier.withDefaultNamespace("textures/misc/underwater.png");
 
     @Override
     public Identifier getStillTexture() {

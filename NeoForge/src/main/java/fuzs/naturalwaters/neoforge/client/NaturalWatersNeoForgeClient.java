@@ -6,7 +6,7 @@ import fuzs.naturalwaters.data.client.ModAtlasProvider;
 import fuzs.naturalwaters.neoforge.client.renderer.block.NeoForgeWaterBlockRenderer;
 import fuzs.naturalwaters.neoforge.data.client.ModBiomeClientInfoProvider;
 import fuzs.naturalwaters.neoforge.mixin.client.accessor.ClientExtensionsManagerNeoForgeAccessor;
-import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
+import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.neoforge.api.data.v2.core.DataProviderHelper;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;

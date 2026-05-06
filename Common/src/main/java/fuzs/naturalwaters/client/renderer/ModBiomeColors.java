@@ -7,15 +7,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.color.block.BlockTintCache;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.ColorResolver;
 import net.minecraft.world.level.biome.Biome;
 
 public class ModBiomeColors {
+    /**
+     * @see BiomeColors#WATER_COLOR_RESOLVER
+     */
     public static final ColorResolver WATER_COLOR_RESOLVER = (Biome biome, double x, double y) -> {
         return ClientBiomeManager.getBiomeClientInfo(biome).waterSurfaceColor().orElseGet(biome::getWaterColor);
     };
+    /**
+     * @see BiomeColors
+     */
     public static final ColorResolver WATER_TRANSPARENCY_RESOLVER = (Biome biome, double x, double z) -> {
         return ClientBiomeManager.getBiomeClientInfo(biome).getWaterSurfaceTransparency();
     };

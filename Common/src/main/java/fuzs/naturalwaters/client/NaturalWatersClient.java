@@ -5,17 +5,15 @@ import fuzs.naturalwaters.client.biome.ClientBiomeManager;
 import fuzs.naturalwaters.client.packs.OpaqueWaterPackResources;
 import fuzs.naturalwaters.client.renderer.ModBiomeColors;
 import fuzs.naturalwaters.config.ClientConfig;
-import fuzs.puzzleslib.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.api.client.core.v1.context.ResourcePackReloadListenersContext;
-import fuzs.puzzleslib.api.client.event.v1.level.ClientLevelEvents;
-import fuzs.puzzleslib.api.client.event.v1.renderer.FogEvents;
-import fuzs.puzzleslib.api.core.v1.context.PackRepositorySourcesContext;
-import fuzs.puzzleslib.api.event.v1.server.TagsUpdatedCallback;
-import fuzs.puzzleslib.api.resources.v1.PackResourcesHelper;
+import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
+import fuzs.puzzleslib.common.api.client.core.v1.context.ResourcePackReloadListenersContext;
+import fuzs.puzzleslib.common.api.client.event.v1.level.ClientLevelEvents;
+import fuzs.puzzleslib.common.api.client.event.v1.renderer.FogEvents;
+import fuzs.puzzleslib.common.api.core.v1.context.PackRepositorySourcesContext;
+import fuzs.puzzleslib.common.api.event.v1.server.TagsUpdatedCallback;
+import fuzs.puzzleslib.common.api.resources.v1.PackResourcesHelper;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.fog.FogData;
 import net.minecraft.client.renderer.fog.environment.FogEnvironment;
 import net.minecraft.core.Holder;
@@ -43,14 +41,11 @@ public class NaturalWatersClient implements ClientModConstructor {
             return;
         }
 
-        if (fogType == FogType.WATER && camera.entity() instanceof LocalPlayer localPlayer) {
-            Holder<Biome> holder = localPlayer.level().getBiome(localPlayer.blockPosition());
+        if (fogType == FogType.WATER && camera.entity() instanceof LocalPlayer player) {
+            Holder<Biome> holder = player.level().getBiome(player.blockPosition());
             Optional<Float> optional = ClientBiomeManager.getBiomeClientInfo(holder).waterFogDistance();
             if (optional.isPresent()) {
-                GameRenderer gameRenderer = Minecraft.getInstance().gameRenderer;
-                fogData.environmentalEnd = Math.min(
-                        96.0F * Math.max(0.25F, localPlayer.getWaterVision()) * optional.get(),
-                        gameRenderer.getRenderDistance());
+                fogData.environmentalEnd = 96.0F * Math.max(0.25F, player.getWaterVision()) * optional.get();
                 fogData.skyEnd = fogData.cloudEnd = fogData.environmentalEnd;
             }
         }
