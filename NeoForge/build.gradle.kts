@@ -8,6 +8,6 @@ dependencies {
 
 multiloader {
     mixins {
-        clientAccessor("ClientExtensionsManagerNeoForgeAccessor")
+        clientAccessor("RegisterFluidModelsEventNeoForgeAccessor")
     }
 }

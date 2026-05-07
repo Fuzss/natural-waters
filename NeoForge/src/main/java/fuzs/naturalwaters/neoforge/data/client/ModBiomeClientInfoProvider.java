@@ -1,8 +1,8 @@
 package fuzs.naturalwaters.neoforge.data.client;
 
-import fuzs.naturalwaters.client.biome.BiomeClientInfo;
-import fuzs.naturalwaters.client.biome.BuiltInBiomeClientInfos;
-import fuzs.naturalwaters.client.biome.ClientBiomeManager;
+import fuzs.naturalwaters.common.client.biome.BiomeClientInfo;
+import fuzs.naturalwaters.common.client.biome.BuiltInBiomeClientInfos;
+import fuzs.naturalwaters.common.client.biome.ClientBiomeManager;
 import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;

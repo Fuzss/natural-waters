@@ -1,6 +1,6 @@
 package fuzs.naturalwaters.neoforge;
 
-import fuzs.naturalwaters.NaturalWaters;
+import fuzs.naturalwaters.common.NaturalWaters;
 import fuzs.puzzleslib.common.api.core.v1.ModConstructor;
 import net.neoforged.fml.common.Mod;
 
