@@ -10,7 +10,7 @@ import fuzs.naturalwaters.neoforge.client.color.block.NeoForgeWaterTintSource;
 import fuzs.naturalwaters.neoforge.data.client.ModBiomeClientInfoProvider;
 import fuzs.naturalwaters.neoforge.mixin.client.accessor.RegisterFluidModelsEventNeoForgeAccessor;
 import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
-import fuzs.puzzleslib.neoforge.api.data.v2.core.DataProviderHelper;
+import fuzs.puzzleslib.neoforge.api.data.v3.core.DataProviderBuilder;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.FluidStateModelSet;
 import net.minecraft.client.resources.model.sprite.Material;
@@ -47,9 +47,8 @@ public class NaturalWatersNeoForgeClient {
     public NaturalWatersNeoForgeClient(ModContainer modContainer) {
         ClientModConstructor.construct(NaturalWaters.MOD_ID, NaturalWatersClient::new);
         registerLoadingHandlers(modContainer.getEventBus());
-        DataProviderHelper.registerDataProviders(NaturalWaters.MOD_ID,
-                ModAtlasProvider::new,
-                ModBiomeClientInfoProvider::new);
+        DataProviderBuilder.of(NaturalWaters.MOD_ID)
+                .addProvider(ModAtlasProvider::new, ModBiomeClientInfoProvider::new);
     }
 
     private static void registerLoadingHandlers(IEventBus eventBus) {

@@ -4,15 +4,17 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.blaze3d.platform.NativeImage;
 import fuzs.naturalwaters.common.NaturalWaters;
 import fuzs.puzzleslib.common.api.client.packs.v1.NativeImageHelper;
-import fuzs.puzzleslib.common.api.resources.v1.AbstractModPackResources;
+import fuzs.puzzleslib.common.api.resources.v2.AbstractModPackResources;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.FluidStateModelSet;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.IoSupplier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.util.ARGB;
 import org.jspecify.annotations.Nullable;
 
@@ -37,8 +39,8 @@ public class OpaqueWaterPackResources extends AbstractModPackResources {
     private final ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
     private final Map<Identifier, Identifier> sprites;
 
-    public OpaqueWaterPackResources() {
-        this(ImmutableMap.<Identifier, Identifier>builder()
+    public OpaqueWaterPackResources(PackType type, PackLocationInfo location, ResourceMetadata metadata) {
+        this(type, location, metadata, ImmutableMap.<Identifier, Identifier>builder()
                 .put(sprite(WATER_STILL), sprite(VANILLA_WATER_STILL))
                 .put(metadata(WATER_STILL), metadata(VANILLA_WATER_STILL))
                 .put(sprite(WATER_FLOW), sprite(VANILLA_WATER_FLOW))
@@ -46,7 +48,8 @@ public class OpaqueWaterPackResources extends AbstractModPackResources {
                 .build());
     }
 
-    private OpaqueWaterPackResources(Map<Identifier, Identifier> sprites) {
+    private OpaqueWaterPackResources(PackType type, PackLocationInfo location, ResourceMetadata metadata, Map<Identifier, Identifier> sprites) {
+        super(type, location, metadata);
         this.sprites = sprites;
     }
 
@@ -87,7 +90,12 @@ public class OpaqueWaterPackResources extends AbstractModPackResources {
                 return null;
             }
         } else {
-            return super.getResource(packType, identifier);
+            return null;
         }
+    }
+
+    @Override
+    public void listResources(PackType packType, String namespace, String path, ResourceOutput resourceOutput) {
+        // NO-OP
     }
 }

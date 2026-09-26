@@ -11,7 +11,7 @@ import fuzs.puzzleslib.common.api.client.core.v1.context.ResourcePackReloadListe
 import fuzs.puzzleslib.common.api.client.event.v1.ClientTagsUpdatedCallback;
 import fuzs.puzzleslib.common.api.client.event.v1.renderer.FogEvents;
 import fuzs.puzzleslib.common.api.core.v1.context.PackRepositorySourcesContext;
-import fuzs.puzzleslib.common.api.resources.v1.PackResourcesHelper;
+import fuzs.puzzleslib.common.api.resources.v2.PackResourcesBuilder;
 import net.minecraft.client.Camera;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.fog.FogData;
@@ -62,9 +62,11 @@ public class NaturalWatersClient implements ClientModConstructor {
 
     @Override
     public void onAddResourcePackFinders(PackRepositorySourcesContext context) {
-        context.registerRepositorySource(PackResourcesHelper.buildClientPack(NaturalWaters.id("opaque_water"),
-                OpaqueWaterPackResources::new,
-                true));
+        context.registerRepositorySource(PackResourcesBuilder.client(NaturalWaters.id("opaque_water"),
+                OpaqueWaterPackResources::new)
+                .fixedPosition(true)
+                .hidden(true)
+                .buildRepositorySource());
     }
 
     @Override

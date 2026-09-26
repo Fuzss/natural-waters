@@ -1,8 +1,8 @@
 package fuzs.naturalwaters.common.data.client;
 
 import fuzs.naturalwaters.common.client.packs.OpaqueWaterPackResources;
-import fuzs.puzzleslib.common.api.client.data.v2.AbstractAtlasProvider;
-import fuzs.puzzleslib.common.api.data.v2.core.DataProviderContext;
+import fuzs.puzzleslib.common.api.client.data.v3.atlas.AbstractAtlasProvider;
+import fuzs.puzzleslib.common.api.data.v3.core.DataProviderContext;
 import net.minecraft.client.renderer.texture.atlas.sources.SingleFile;
 import net.minecraft.data.AtlasIds;
 
