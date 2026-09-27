@@ -2,6 +2,7 @@ package fuzs.naturalwaters.common.client.biome;
 
 import com.google.common.collect.ImmutableMap;
 import fuzs.naturalwaters.common.NaturalWaters;
+import fuzs.naturalwaters.common.client.attribute.BiomeEnvironmentAttributes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.Holder;
@@ -54,6 +55,8 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
             this.resolvedBiomeClientInfos = fillMissingBiomeClientInfos(clientPacketListener.registryAccess()
                     .lookupOrThrow(Registries.BIOME), new IdentityHashMap<>(this.biomeClientInfos));
         }
+
+        BiomeEnvironmentAttributes.clear();
     }
 
     public static BiomeClientInfo getBiomeClientInfo(Biome biome) {
@@ -87,12 +90,14 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
         consumer.accept(NaturalWaters.id("client_biome_manager"), instance = new ClientBiomeManager());
     }
 
-    public static void onClientTagsUpdated(RegistryAccess registries) {
+    public static void onClientTagsUpdated(RegistryAccess registryAccess) {
         ClientBiomeManager clientBiomeManager = instance;
         if (clientBiomeManager != null) {
-            clientBiomeManager.resolvedBiomeClientInfos = fillMissingBiomeClientInfos(registries.lookupOrThrow(
+            clientBiomeManager.resolvedBiomeClientInfos = fillMissingBiomeClientInfos(registryAccess.lookupOrThrow(
                     Registries.BIOME), new IdentityHashMap<>(clientBiomeManager.biomeClientInfos));
         }
+
+        BiomeEnvironmentAttributes.clear();
     }
 
     private static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos) {
