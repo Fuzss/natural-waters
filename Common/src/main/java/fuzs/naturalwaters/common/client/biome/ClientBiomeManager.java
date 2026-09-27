@@ -47,18 +47,16 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
     protected void apply(Map<Identifier, BiomeClientInfo> map, ResourceManager resourceManager, ProfilerFiller profiler) {
         this.loaded = this.resolved = map.entrySet()
                 .stream()
-                .collect(Collectors.toUnmodifiableMap((Map.Entry<Identifier, BiomeClientInfo> entry) -> ResourceKey.create(
-                        Registries.BIOME,
-                        entry.getKey()), Map.Entry::getValue));
+                .collect(Collectors.toUnmodifiableMap((Map.Entry<Identifier, BiomeClientInfo> entry) -> {
+                    return ResourceKey.create(Registries.BIOME, entry.getKey());
+                }, Map.Entry::getValue));
         ClientPacketListener clientPacketListener = Minecraft.getInstance().getConnection();
         if (clientPacketListener != null) {
-            HolderLookup.RegistryLookup<Biome> biomeLookup = clientPacketListener.registryAccess()
-                    .lookupOrThrow(Registries.BIOME);
-            this.resolved = fillMissingBiomeClientInfos(biomeLookup, new IdentityHashMap<>(this.loaded));
-            BiomeEnvironmentAttributes.rebuild(biomeLookup);
-        } else {
-            BiomeEnvironmentAttributes.clear();
+            this.resolved = fillMissingBiomeClientInfos(clientPacketListener.registryAccess()
+                    .lookupOrThrow(Registries.BIOME), new IdentityHashMap<>(this.loaded));
         }
+
+        BiomeEnvironmentAttributes.clear();
     }
 
     public static BiomeClientInfo getBiomeClientInfo(Biome biome) {
@@ -91,13 +89,11 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
     public static void onClientTagsUpdated(RegistryAccess registryAccess) {
         ClientBiomeManager clientBiomeManager = instance;
         if (clientBiomeManager != null) {
-            HolderLookup.RegistryLookup<Biome> biomeLookup = registryAccess.lookupOrThrow(Registries.BIOME);
-            clientBiomeManager.resolved = fillMissingBiomeClientInfos(biomeLookup,
+            clientBiomeManager.resolved = fillMissingBiomeClientInfos(registryAccess.lookupOrThrow(Registries.BIOME),
                     new IdentityHashMap<>(clientBiomeManager.loaded));
-            BiomeEnvironmentAttributes.rebuild(biomeLookup);
-        } else {
-            BiomeEnvironmentAttributes.clear();
         }
+
+        BiomeEnvironmentAttributes.clear();
     }
 
     private static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> infos) {

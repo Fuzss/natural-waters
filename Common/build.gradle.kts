@@ -8,6 +8,6 @@ dependencies {
 
 multiloader {
     mixins {
-        clientMixin("BiomeMixin")
+        clientMixin("EnvironmentAttributeSystemMixin")
     }
 }

@@ -35,7 +35,7 @@ public class NaturalWatersClient implements ClientModConstructor {
 
     @Override
     public void onClientSetup() {
-        NaturalWaters.CONFIG.getHolder(ClientConfig.class).addCallback((Runnable) BiomeEnvironmentAttributes::rebuild);
+        NaturalWaters.CONFIG.getHolder(ClientConfig.class).addCallback(BiomeEnvironmentAttributes::clear);
     }
 
     @Override

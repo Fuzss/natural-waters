@@ -5,71 +5,63 @@ import fuzs.naturalwaters.common.client.biome.BiomeClientInfo;
 import fuzs.naturalwaters.common.client.biome.ClientBiomeManager;
 import fuzs.naturalwaters.common.config.ClientConfig;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
+import net.minecraft.world.attribute.EnvironmentAttributeSystem;
 import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.attribute.modifier.FloatModifier;
 import net.minecraft.world.level.biome.Biome;
-import org.jspecify.annotations.Nullable;
+import net.minecraft.world.level.biome.BiomeManager;
 
-import java.util.IdentityHashMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * Overlays client-only biome water values onto {@link EnvironmentAttributeMap} instances so that the built-in
- * {@link net.minecraft.world.attribute.EnvironmentAttributeSystem} biome layer picks them up and interpolates them like
- * any other biome attribute.
+ * Overlays client-only biome water values onto {@link EnvironmentAttributeMap} instances which are then blended by the
+ * custom {@link WaterFogAttributeLayer} registered through
+ * {@link EnvironmentAttributeSystem.Builder#addPositionalLayer}.
  * <p>
- * The overlays are built eagerly during registry synchronization in {@link ClientBiomeManager}, keyed by {@link Biome}
- * identity, so {@link Biome#getAttributes()} only needs a cache lookup and never depends on the client connection.
+ * The overlays are built from the holder of a sampled biome, so the biome resource key is always available, and no
+ * client connection is required. Instances are cached per biome key and invalidated via {@link #clear()}.
  */
 public final class BiomeEnvironmentAttributes {
-    private static Map<Biome, EnvironmentAttributeMap> cachedAttributesByBiome = Map.of();
-    private static HolderLookup.@Nullable RegistryLookup<Biome> biomeLookup;
-    private static boolean rebuilding;
+    private static final Map<ResourceKey<Biome>, EnvironmentAttributeMap> BIOME_ATTRIBUTES_CACHE = new HashMap<>();
+    private static int timesChanged;
 
     private BiomeEnvironmentAttributes() {
         // NO-OP
     }
 
-    public static EnvironmentAttributeMap get(Biome biome, EnvironmentAttributeMap original) {
-        // while rebuilding let the raw biome attributes pass through so they can be read from an unmodified map
-        if (rebuilding) {
-            return original;
-        }
-
-        return cachedAttributesByBiome.getOrDefault(biome, original);
+    public static void addLayers(EnvironmentAttributeSystem.Builder builder, BiomeManager biomeManager) {
+        WaterFogAttributeLayer layer = new WaterFogAttributeLayer(biomeManager);
+        builder.addPositionalLayer(EnvironmentAttributes.WATER_FOG_COLOR, layer::applyColor);
+        builder.addPositionalLayer(EnvironmentAttributes.WATER_FOG_END_DISTANCE, layer::applyDistance);
     }
 
-    public static void rebuild(HolderLookup.RegistryLookup<Biome> biomeLookup) {
-        BiomeEnvironmentAttributes.biomeLookup = biomeLookup;
-        rebuild();
-    }
-
-    public static void rebuild() {
-        HolderLookup.RegistryLookup<Biome> biomeLookup = BiomeEnvironmentAttributes.biomeLookup;
-        if (biomeLookup == null) {
-            return;
-        }
-
-        rebuilding = true;
-        try {
-            IdentityHashMap<Biome, EnvironmentAttributeMap> rebuiltAttributes = new IdentityHashMap<>();
-            biomeLookup.listElements().forEach((Holder.Reference<Biome> holder) -> {
-                rebuiltAttributes.put(holder.value(),
-                        create(holder.value().getAttributes(), ClientBiomeManager.getBiomeClientInfo(holder.key())));
+    public static EnvironmentAttributeMap get(Holder<Biome> holder) {
+        EnvironmentAttributeMap attributes = holder.value().getAttributes();
+        return holder.unwrapKey().map((ResourceKey<Biome> biomeKey) -> {
+            return BIOME_ATTRIBUTES_CACHE.computeIfAbsent(biomeKey, (ResourceKey<Biome> key) -> {
+                return create(key, attributes);
             });
-            cachedAttributesByBiome = rebuiltAttributes;
-        } finally {
-            rebuilding = false;
-        }
+        }).orElse(attributes);
     }
 
-    private static EnvironmentAttributeMap create(EnvironmentAttributeMap attributes, BiomeClientInfo biomeClientInfo) {
+    public static int getTimesChanged() {
+        return timesChanged;
+    }
+
+    public static boolean isActive() {
         ClientConfig config = NaturalWaters.CONFIG.get(ClientConfig.class);
-        EnvironmentAttributeMap.Builder builder = EnvironmentAttributeMap.builder().putAll(attributes);
+        return config.waterFogColor || config.waterFogDistance;
+    }
+
+    private static EnvironmentAttributeMap create(ResourceKey<Biome> resourceKey, EnvironmentAttributeMap original) {
+        ClientConfig config = NaturalWaters.CONFIG.get(ClientConfig.class);
+        BiomeClientInfo biomeClientInfo = ClientBiomeManager.getBiomeClientInfo(resourceKey);
+        EnvironmentAttributeMap.Builder builder = EnvironmentAttributeMap.builder().putAll(original);
         boolean updated = false;
 
         if (config.waterFogColor) {
@@ -91,11 +83,11 @@ public final class BiomeEnvironmentAttributes {
             }
         }
 
-        return updated ? builder.build() : attributes;
+        return updated ? builder.build() : original;
     }
 
     public static void clear() {
-        cachedAttributesByBiome = Map.of();
-        biomeLookup = null;
+        BIOME_ATTRIBUTES_CACHE.clear();
+        timesChanged++;
     }
 }
