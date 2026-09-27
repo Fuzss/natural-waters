@@ -17,4 +17,8 @@ public class ClientConfig implements ConfigCore {
     public boolean requiresCustomWaterTintSource() {
         return this.waterSurfaceColor || this.waterSurfaceOpacity;
     }
+
+    public boolean applyCustomEnvironmentAttributes() {
+        return this.waterFogColor || this.waterFogDistance;
+    }
 }
