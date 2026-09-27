@@ -1,4 +1,4 @@
-// 26.3	2026-09-26T20:35:41.828606	naturalwaters/biomes generator for naturalwaters
+// 26.3	2026-09-27T10:07:26.603183	naturalwaters/biomes generator for naturalwaters
 e55093ce11be3921db2c011140fc6b0e46987be9 assets/minecraft/naturalwaters/biomes/badlands.json
 71ae3d0d82a8babe5afcb085541c426b23cd826a assets/minecraft/naturalwaters/biomes/bamboo_jungle.json
 d20e907e2152c09c374d39592109a63bd7d42206 assets/minecraft/naturalwaters/biomes/basalt_deltas.json
@@ -7,6 +7,7 @@ d20e907e2152c09c374d39592109a63bd7d42206 assets/minecraft/naturalwaters/biomes/b
 50ead7bf2502375a8905419edf98548e4fb049ed assets/minecraft/naturalwaters/biomes/cherry_grove.json
 ad3b28b836a6c17a9a464c0c71b776bbb401f80c assets/minecraft/naturalwaters/biomes/cold_ocean.json
 e234e69d7b7a4adc08b441ed789740f3eef23bc5 assets/minecraft/naturalwaters/biomes/crimson_forest.json
+da6777d2c44bfc8bfb6c89db516aa30d441f6219 assets/minecraft/naturalwaters/biomes/dappled_forest.json
 25155e7c76e486039737c4ace55dba11bdb5c721 assets/minecraft/naturalwaters/biomes/dark_forest.json
 6a915a3311ab831795c5488c667a00cda0b1103f assets/minecraft/naturalwaters/biomes/deep_cold_ocean.json
 97d6d2710e88296c52bf638d2214b13fcbfc6284 assets/minecraft/naturalwaters/biomes/deep_dark.json
