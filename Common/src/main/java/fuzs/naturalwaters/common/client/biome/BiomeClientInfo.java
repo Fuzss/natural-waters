@@ -3,7 +3,6 @@ package fuzs.naturalwaters.common.client.biome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ARGB;
@@ -15,11 +14,9 @@ public record BiomeClientInfo(Optional<Integer> waterSurfaceColor,
                               Optional<Integer> waterFogColor,
                               Optional<Float> waterFogDistance,
                               Optional<Float> waterSurfaceOpacity) {
-    public static final Codec<Integer> COLOR_CODEC = Codec.withAlternative(TextColor.CODEC.xmap(TextColor::getValue,
-            TextColor::fromRgb), ExtraCodecs.RGB_COLOR_CODEC);
-    public static final Codec<BiomeClientInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(COLOR_CODEC.optionalFieldOf(
+    public static final Codec<BiomeClientInfo> CODEC = RecordCodecBuilder.create(instance -> instance.group(ExtraCodecs.STRING_RGB_COLOR.optionalFieldOf(
                     "water_surface_color").forGetter(BiomeClientInfo::waterSurfaceColor),
-            COLOR_CODEC.optionalFieldOf("water_fog_color").forGetter(BiomeClientInfo::waterFogColor),
+            ExtraCodecs.STRING_RGB_COLOR.optionalFieldOf("water_fog_color").forGetter(BiomeClientInfo::waterFogColor),
             ExtraCodecs.floatRange(0.0F, 1.0F)
                     .optionalFieldOf("water_fog_distance")
                     .forGetter(BiomeClientInfo::waterFogDistance),
