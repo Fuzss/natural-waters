@@ -36,8 +36,8 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
 
     @Nullable
     private static ClientBiomeManager instance;
-    private Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos = Map.of();
-    private Map<ResourceKey<Biome>, BiomeClientInfo> resolvedBiomeClientInfos = Map.of();
+    private Map<ResourceKey<Biome>, BiomeClientInfo> loaded = Map.of();
+    private Map<ResourceKey<Biome>, BiomeClientInfo> resolved = Map.of();
 
     public ClientBiomeManager() {
         super(BiomeClientInfo.CODEC, ASSET_LISTER);
@@ -45,18 +45,20 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
 
     @Override
     protected void apply(Map<Identifier, BiomeClientInfo> map, ResourceManager resourceManager, ProfilerFiller profiler) {
-        this.biomeClientInfos = this.resolvedBiomeClientInfos = map.entrySet()
+        this.loaded = this.resolved = map.entrySet()
                 .stream()
                 .collect(Collectors.toUnmodifiableMap((Map.Entry<Identifier, BiomeClientInfo> entry) -> ResourceKey.create(
                         Registries.BIOME,
                         entry.getKey()), Map.Entry::getValue));
         ClientPacketListener clientPacketListener = Minecraft.getInstance().getConnection();
         if (clientPacketListener != null) {
-            this.resolvedBiomeClientInfos = fillMissingBiomeClientInfos(clientPacketListener.registryAccess()
-                    .lookupOrThrow(Registries.BIOME), new IdentityHashMap<>(this.biomeClientInfos));
+            HolderLookup.RegistryLookup<Biome> biomeLookup = clientPacketListener.registryAccess()
+                    .lookupOrThrow(Registries.BIOME);
+            this.resolved = fillMissingBiomeClientInfos(biomeLookup, new IdentityHashMap<>(this.loaded));
+            BiomeEnvironmentAttributes.rebuild(biomeLookup);
+        } else {
+            BiomeEnvironmentAttributes.clear();
         }
-
-        BiomeEnvironmentAttributes.clear();
     }
 
     public static BiomeClientInfo getBiomeClientInfo(Biome biome) {
@@ -73,14 +75,10 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
         }
     }
 
-    public static BiomeClientInfo getBiomeClientInfo(Holder<Biome> holder) {
-        return holder.unwrapKey().map(ClientBiomeManager::getBiomeClientInfo).orElse(BUILT_IN_FALLBACK);
-    }
-
     public static BiomeClientInfo getBiomeClientInfo(ResourceKey<Biome> resourceKey) {
         ClientBiomeManager clientBiomeManager = instance;
         if (clientBiomeManager != null) {
-            return clientBiomeManager.resolvedBiomeClientInfos.getOrDefault(resourceKey, BUILT_IN_FALLBACK);
+            return clientBiomeManager.resolved.getOrDefault(resourceKey, BUILT_IN_FALLBACK);
         } else {
             return BUILT_IN_FALLBACK;
         }
@@ -93,22 +91,22 @@ public final class ClientBiomeManager extends SimpleJsonResourceReloadListener<B
     public static void onClientTagsUpdated(RegistryAccess registryAccess) {
         ClientBiomeManager clientBiomeManager = instance;
         if (clientBiomeManager != null) {
-            clientBiomeManager.resolvedBiomeClientInfos = fillMissingBiomeClientInfos(registryAccess.lookupOrThrow(
-                    Registries.BIOME), new IdentityHashMap<>(clientBiomeManager.biomeClientInfos));
+            HolderLookup.RegistryLookup<Biome> biomeLookup = registryAccess.lookupOrThrow(Registries.BIOME);
+            clientBiomeManager.resolved = fillMissingBiomeClientInfos(biomeLookup,
+                    new IdentityHashMap<>(clientBiomeManager.loaded));
+            BiomeEnvironmentAttributes.rebuild(biomeLookup);
+        } else {
+            BiomeEnvironmentAttributes.clear();
         }
-
-        BiomeEnvironmentAttributes.clear();
     }
 
-    private static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> biomeClientInfos) {
+    private static Map<ResourceKey<Biome>, BiomeClientInfo> fillMissingBiomeClientInfos(HolderLookup.RegistryLookup<Biome> biomeLookup, Map<ResourceKey<Biome>, BiomeClientInfo> infos) {
         biomeLookup.listElements().forEach((Holder.Reference<Biome> holder) -> {
-            if (!biomeClientInfos.containsKey(holder.key())) {
-                ModBiomeClientInfos.pick(holder)
-                        .ifPresent((BiomeClientInfo biomeClientInfo) -> biomeClientInfos.put(holder.key(),
-                                biomeClientInfo));
+            if (!infos.containsKey(holder.key())) {
+                ModBiomeClientInfos.pick(holder).ifPresent((BiomeClientInfo info) -> infos.put(holder.key(), info));
             }
         });
 
-        return ImmutableMap.copyOf(biomeClientInfos);
+        return ImmutableMap.copyOf(infos);
     }
 }

@@ -10,8 +10,11 @@ import fuzs.puzzleslib.common.api.client.core.v1.ClientModConstructor;
 import fuzs.puzzleslib.common.api.client.core.v1.context.BlockColorsContext;
 import fuzs.puzzleslib.common.api.client.core.v1.context.ResourcePackReloadListenersContext;
 import fuzs.puzzleslib.common.api.client.event.v1.ClientTagsUpdatedCallback;
+import fuzs.puzzleslib.common.api.client.event.v1.level.ClientLevelEvents;
 import fuzs.puzzleslib.common.api.core.v1.context.PackRepositorySourcesContext;
 import fuzs.puzzleslib.common.api.resources.v2.PackResourcesBuilder;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.block.Blocks;
 
 public class NaturalWatersClient implements ClientModConstructor {
@@ -23,11 +26,16 @@ public class NaturalWatersClient implements ClientModConstructor {
 
     private static void registerEventHandlers() {
         ClientTagsUpdatedCallback.EVENT.register(ClientBiomeManager::onClientTagsUpdated);
+        ClientLevelEvents.UNLOAD.register(NaturalWatersClient::onLevelUnload);
+    }
+
+    private static void onLevelUnload(Minecraft minecraft, ClientLevel clientLevel) {
+        BiomeEnvironmentAttributes.clear();
     }
 
     @Override
     public void onClientSetup() {
-        NaturalWaters.CONFIG.getHolder(ClientConfig.class).addCallback(BiomeEnvironmentAttributes::clear);
+        NaturalWaters.CONFIG.getHolder(ClientConfig.class).addCallback((Runnable) BiomeEnvironmentAttributes::rebuild);
     }
 
     @Override
