@@ -86,7 +86,7 @@ public final class BuiltInBiomeClientInfos {
     public static final BiomeClientInfo MEGA_SPRUCE_TAIGA = new BiomeClientInfo(0x44AFF5, 0x2d6d77);
     public static final BiomeClientInfo MEGA_TAIGA_MUTATED = new BiomeClientInfo(0x2d6d77, 0x2d6d77);
     public static final BiomeClientInfo SULFUR_CAVES = new BiomeClientInfo(0x34BF89, 0x8cb831);
-    public static final BiomeClientInfo DAPPLED_FOREST = new BiomeClientInfo(0x375154, 0xccd8e2, 0.85F, 1.0F);
+    public static final BiomeClientInfo DAPPLED_FOREST = new BiomeClientInfo(0x375154, 0x1E97F2, 0.85F, 1.0F);
 
     private BuiltInBiomeClientInfos() {
         // NO-OP

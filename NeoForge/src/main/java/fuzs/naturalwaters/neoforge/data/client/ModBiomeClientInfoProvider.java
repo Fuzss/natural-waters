@@ -38,6 +38,7 @@ public class ModBiomeClientInfoProvider extends JsonCodecProvider<BiomeClientInf
         this.biome(Biomes.CHERRY_GROVE, BuiltInBiomeClientInfos.CHERRY_GROVE);
         this.biome(Biomes.COLD_OCEAN, BuiltInBiomeClientInfos.COLD_OCEAN);
         this.biome(Biomes.CRIMSON_FOREST, BuiltInBiomeClientInfos.CRIMSON_FOREST);
+        this.biome(Biomes.DAPPLED_FOREST, BuiltInBiomeClientInfos.DAPPLED_FOREST);
         this.biome(Biomes.DARK_FOREST, BuiltInBiomeClientInfos.ROOFED_FOREST);
         this.biome(Biomes.DEEP_COLD_OCEAN, BuiltInBiomeClientInfos.DEEP_COLD_OCEAN);
         this.biome(Biomes.DEEP_DARK, BuiltInBiomeClientInfos.DEEP_DARK);
