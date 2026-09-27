@@ -1,6 +1,6 @@
 {
-  "water_fog_color": "#1165B0",
+  "water_fog_color": "#1165b0",
   "water_fog_distance": 1.0,
-  "water_surface_color": "#1787D4",
+  "water_surface_color": "#1787d4",
   "water_surface_opacity": 0.75
 }
